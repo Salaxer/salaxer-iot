@@ -10,7 +10,7 @@ const app = express();
 const httpServer = createServer(app);
 const io = new Server(httpServer, {
   cors: {
-    origin: "https://circuiteciot-1aeb2.firebaseapp.com/",
+    origin: "https://circuiteciot-1aeb2.firebaseapp.com",
     methods: ["GET", "POST"],
     allowedHeaders: ["my-custom-header"],
     credentials: true
