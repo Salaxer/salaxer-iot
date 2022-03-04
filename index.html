@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Socket.IO chat</title>
+    <title>IOT</title>
     <style>
       body { margin: 0; padding-bottom: 3rem; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
 
@@ -18,28 +18,64 @@
   <body>
     <ul id="messages"></ul>
     <form id="form" action="">
-      <input id="input" autocomplete="off" /><button>Send</button>
+      <input type="checkbox" onchange="addItem(this, 'power')" name="check" id="power">
+      <input type="range" onchange="addItem(this,'brightness')" name="range" id="brightness">
+      <input id="input" autocomplete="off" onchange="addItem(this,'messages')" />
+      <button>Send</button>
     </form>
     <script src="/socket.io/socket.io.js"></script>
 
     <script>
+      function addItem(value,input){
+        if (value.type == 'checkbox') {
+          data[input] = value.checked;
+        }else{
+          data[input] = value.value;
+        }
+        console.log(data);
+        socket.emit('dataTranfer', {...data});
+      };
       var socket = io();
+      var data = {
+        power: false,
+        wifi: false,
+        bluetooth: false,
+        brightness: 0,
+        battery: 0,
+        hit:  false,
+        tilt: false,
+        door: false,
+        volts: 0,
+        ampers: 0,
+        virtualAssistant: true,
+        img: "",
+        pirSensor: [],
+        magneticSensor: Array< [],
+        // no comprobado
+        light: false,
+        detectUnder: false,
+        codesUser: [],
+        rgb: [0,0,0],
+        messages: ""
+      }
 
       var messages = document.getElementById('messages');
       var form = document.getElementById('form');
       var input = document.getElementById('input');
+      var power = document.getElementById('power');
 
       form.addEventListener('submit', function(e) {
         e.preventDefault();
         if (input.value) {
-          socket.emit('chat message', input.value);
+          socket.emit('dataTranfer', {...data});
           input.value = '';
         }
       });
-
-      socket.on('chat message', function(msg) {
+      socket.on('dataTranfer', function(msg) {
         var item = document.createElement('li');
-        item.textContent = msg;
+        data = msg;
+        item.textContent = msg.power;
+        console.log(msg);
         messages.appendChild(item);
         window.scrollTo(0, document.body.scrollHeight);
       });
